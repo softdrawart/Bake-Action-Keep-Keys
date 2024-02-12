@@ -11,7 +11,10 @@ bl_info = {
 import bpy
 
 def update_action_list(self, context):
-    action_items = [(action.name,action.name,'') for action in bpy.data.actions]
+    action_items = []
+    for track in context.active_object.animation_data.nla_tracks:
+        for strip in track.strips:
+            action_items.append((strip.action.name,strip.action.name,strip.action.name))
     return action_items
 
 class BakeAction_PT(bpy.types.Panel):
@@ -88,13 +91,11 @@ def register():
     
     bpy.types.Scene.source_action = bpy.props.EnumProperty(
         items=update_action_list, 
-        description="Source Action", 
-        update=update_action_list
+        description="Source Action"
     )
     bpy.types.Scene.destination_action = bpy.props.EnumProperty(
         items=update_action_list, 
-        description="Destination Action", 
-        update=update_action_list
+        description="Destination Action"
     )
 
 def unregister():
